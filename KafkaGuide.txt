@@ -1,0 +1,19 @@
+http://kafka.apache.org/documentation.html#quickstart
+https://github.com/bkimminich/apache-kafka-book-examples
+
+Learning Folder
+D:\PrivateWorkspace\learn-kafka\bin
+
+Startup "DevEnvironment" VM
+
+Terminal 1
+cd /opt/kafka_2.10-0.8.1.1
+sudo bin/zookeeper-server-start.sh config/zookeeper.properties
+
+Terminal 2
+cd /opt/kafka_2.10-0.8.1.1
+bin/kafka-server-start.sh config/server.properties
+
+Windows 
+cd D:\Software\kafka_2.10-0.8.1.1
+d:\PrivateWorkspace\learn-kafka\bin\start_consumer.bat

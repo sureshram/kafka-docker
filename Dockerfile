@@ -1,19 +1,31 @@
-FROM anapsix/alpine-java
+FROM centos:6
 
-MAINTAINER Wurstmeister 
+MAINTAINER suresh.r@metricstream.com
 
-RUN apk add --update unzip wget curl docker jq coreutils
+RUN yum -y install epel-release
+RUN yum -y update
 
-ENV KAFKA_VERSION="0.10.0.0" SCALA_VERSION="2.11"
+RUN mkdir /opt/software
+
+WORKDIR /opt/software
+
+ENV KAFKA_VERSION="0.9.0.0" SCALA_VERSION="2.11"
+
 ADD download-kafka.sh /tmp/download-kafka.sh
-RUN /tmp/download-kafka.sh && tar xfz /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C /opt && rm /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz
 
-VOLUME ["/kafka"]
+# Install download tools and json parser
+RUN yum install -y wget
 
-ENV KAFKA_HOME /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}
-ADD start-kafka.sh /usr/bin/start-kafka.sh
-ADD broker-list.sh /usr/bin/broker-list.sh
-ADD create-topics.sh /usr/bin/create-topics.sh
+RUN yum install -y jq
 
-# Use "exec" form so that it runs as PID 1 (useful for graceful shutdown)
-CMD ["start-kafka.sh"]
+RUN yum install -y java-1.8.0-openjdk-devel
+
+RUN /tmp/download-kafka.sh
+
+RUN tar -xvzf /tmp/kafka_2.11-0.9.0.0.tgz -C /opt/software
+
+EXPOSE 2181
+
+# Start zookeeper
+CMD bin/zookeeper-server-start.sh config/zookeeper.properties
+
